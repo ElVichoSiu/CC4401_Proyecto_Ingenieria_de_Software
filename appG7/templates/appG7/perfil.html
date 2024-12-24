@@ -1,0 +1,71 @@
+{% extends 'appG7/base.html' %}
+
+{% block title %} Perfil de {{ user.username }} {% endblock %}
+{% block css %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/appG7/login.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/appG7/perfil.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container">
+   <h1 id="bajada"> Perfil de {{ user.username }} <br> </h1> 
+   
+   {% if user.profile %}
+      <img src="{{user.profile.profile_pic.url}}" alt="{{ user.username }}" class="profile_pic"  accept=".jpg,.jpeg,.png"/>
+      <p class="bio">{{ user.profile.bio }}</p> <!-- Mostrar biografía -->
+   {% endif %}
+   
+   <h2 class="text-center">{{ user.username | title }}</h2>
+   <p class="text-center"><a href="mailto:{{user.email}}">{{user.email}}</a></p>
+   <hr>
+
+   
+   <h3>Opiniones sobre {{ user.username }}</h3>
+      {% for opinion in opiniones %}
+         <div class="opinion">
+            <p><strong>{{ opinion.id_critico.username }}</strong> dice: <i>{{ opinion.opinion }}</i></p>
+            <ul>
+               <li>Puntualidad: {{ opinion.puntualidad }}/10</li>
+               <li>Respeto: {{ opinion.respeto }}/10</li>
+            </ul>
+         </div>
+      {% empty %}
+         <p>No hay opiniones sobre este usuario.</p>
+      {% endfor %}
+   {% if request.user == user %}
+   <hr>
+   <h3>Actualizar perfil</h3>
+   <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group">
+         <label for="username">Nombre de usuario:</label>
+         {{ UserUpdateForm.username }}
+         {{ user_form.username }}
+       </div>
+       
+       <div class="form-group">
+         <label for="email">Email:</label>
+         {{ UserUpdateForm.email }}
+         {{ user_form.email}}
+       </div>
+       
+       <div class="form-group">
+         <label for="bio">Biografía:</label>
+         {{ ProfileUpdateForm.bio}}
+         {{ profile_form.bio }}
+       </div>
+       
+       <div class="form-group">
+         <label for="profile_pic">Foto de perfil:</label>
+         {{ ProfileUpdateForm.profile_pic }}
+         {{ profile_form.profile_pic }}
+       </div>
+      
+      <button type="submit" class="btn btn-primary">Actualizar</button>
+  </form>
+      
+   {% else %}
+      <a href="{% url 'opinion_usuario' request.user.username user.username %}" class="btn btn-outline-success">Opina sobre usuario</a>
+   {% endif %}
+</div>
+{% endblock %}

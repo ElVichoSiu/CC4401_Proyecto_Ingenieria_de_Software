@@ -1,0 +1,95 @@
+{% extends 'appG7/base.html' %}
+
+{% block title %} Registro {% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <style>
+        table {
+            font-family: "Roboto", sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        tr:nth-child(even){background-color: #f2f2f2;}
+        tr:hover {
+            background-color: #ddd;
+        }
+        th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+        .join-button {
+            background-color: #04AA6D;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+{% if messages %}
+       <ul class="messages">
+           {% for message in messages %}
+               <div class="alert">
+                   {{ message }}
+               </div>
+           {% endfor %}
+       </ul>
+   {% endif %}
+<body>
+    <h1>Sesiones de Estudio Disponibles</h1>
+    <form method = "get">
+        {{ form.as_p }}
+        <button type="submit">Filtrar</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Ramo : Sección</th>
+                <th>Autor/a</th>
+                <th>Descripción</th>
+                <th>Fecha : Hora</th>
+                <th>Cupos Disponibles</th>
+                <th>Unirse</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sesion in sesiones %}
+            <tr>
+                <td>{{ sesion.get_ramo_display }} : {{ sesion.seccion }}</td>
+                <td> {{ sesion.autor }} </td>
+                <td> {{ sesion.descripcion }} </td>
+                <td> {{ sesion.fecha }} {{ sesion.hora }} </td>
+                <td>{{ sesion.members|count }}/{{ sesion.maxMembers }}</td>
+                <td>
+                    {% if sesion.members.filter(id=request.user.id).exists %}
+                    <form method="post" action="{% url 'salirse_sesion' sesion.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="leave-button">Salirse</button>
+                    </form>
+                    {% else %}
+                        <form method="post" action="{% url 'unirse_sesion' sesion.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="join-button">Unirse</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+{% endblock %}

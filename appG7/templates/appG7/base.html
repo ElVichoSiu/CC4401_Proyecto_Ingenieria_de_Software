@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static '/appG7/style.css' %}">
+    {% block css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-light" style="background-color:#af937a ;">
+        <a class="navbar-brand" href="{% url 'index_page' %}" class="btn btn-outline-success">Sesión de estudio</a>
+        <form class="form-inline">
+          <a href="{% url 'index_page' %}" class="btn btn-outline-success">Inicio </a>
+             {% if user.is_authenticated %}
+                    <a href="{% url 'user_profile' request.user.username %}" class="btn btn-outline-success">Mi perfil </a>
+                    <a href="{% url 'logout' %}" class="btn btn-outline-success">Cerrar sesión </a>
+                
+                {% else %}
+                    <a href="{% url 'register_user' %}" class="btn btn-outline-success">Registrarse</a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-success">Iniciar Sesión</a>
+                {% endif %}
+        </form>
+    </nav>
+    <main>{% block content %}{% endblock %}</main>
+    {% block javascript %}{% endblock %}
+</body>
+</html>

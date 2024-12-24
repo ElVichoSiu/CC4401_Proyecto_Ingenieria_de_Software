@@ -1,0 +1,133 @@
+{% extends 'appG7/base.html' %}
+
+{% block title %} Inicio {% endblock %}
+{% block css %}
+{% load static %}
+<link rel="stylesheet" type="text/css"href="{% static '/appG7/login.css' %}">
+<style>
+    /* Estilos adicionales en línea */
+    table {
+        font-family: "Roboto", sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+    tr:nth-child(even){background-color: #f2f2f2;}
+    tr:hover {
+        background-color: #ddd;
+    }
+    th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <div class="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </ul>
+{% endif %}
+<h2>¡Bienvenido acá encontrarás las sesiones de estudio que te ayudarán con tu aprendizaje!</h2>
+{% if user.is_authenticated %}
+<a href="{% url 'sesion' %}" class="btn btn-outline-2">Crear Nueva Sesion De estudio </a>
+{% endif %}
+
+<h1>Sesiones de Estudio Disponibles</h1>
+<form method = "get">
+    {{ form.as_p }}
+    <button type="submit">Filtrar</button>
+</form>
+<table>
+    <thead>
+        <tr>
+            <th>Ramo : Sección</th>
+            <th>Autor/a</th>
+            <th>Descripción</th>
+            <th>Fecha : Hora</th>
+            <th>Cupos Disponibles</th>
+            <th>Unirse</th>
+            <th>Detalle</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sesion in sesiones %}
+            <tr>
+                <td> {{ sesion.get_ramo_display }} : {{ sesion.seccion }} </td>
+                <td> {{ sesion.autor }} </td>
+                <td> {{ sesion.descripcion }} </td>
+                <td> {{ sesion.fecha }} {{ sesion.hora }} </td>
+                <td> {{ sesion.members.count }}/{{ sesion.maxMembers }} </td>
+                <td>
+                    {% if sesion.is_member %}
+                        <form method="post" action="{% url 'salirse_sesion' sesion.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="leave-button">Salirse</button>
+                        </form>
+                    {% else %}
+                        <form method="post" action="{% url 'unirse_sesion' sesion.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="join-button">Unirse</button>
+                        </form>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'detalle_sesion' sesion.id %}" class="btn btn-outline-2">Detalle</a>
+                </td>                  
+            </tr>
+            {% endfor %}
+    </tbody>
+</table>
+
+<h2>Sesiones en las que participas</h2>
+{% if mis_sesiones %}
+    <table>
+        <thead>
+            <tr>
+                <th>Ramo : Sección</th>
+                <th>Autor/a</th>
+                <th>Descripción</th>
+                <th>Medio De Comunicación</th>
+                <th>Fecha : Hora</th>
+                <th>Cupos Disponibles</th>
+                <th>Unirse</th>
+                <th>Detalle</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sesion in mis_sesiones %}
+                <tr>
+                    <td>{{ sesion.get_ramo_display }} : {{ sesion.seccion }}</td>
+                    <td> {{ sesion.autor }} </td>
+                    <td> {{ sesion.descripcion }} </td>
+                    <td> {{ sesion.link }} </td>
+                    <td> {{ sesion.fecha }} {{ sesion.hora }} </td>
+                    <td>{{ sesion.members.count }}/{{ sesion.maxMembers }}</td>
+                    <td>
+                        <form method="post" action="{% url 'salirse_sesion' sesion.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="leave-button">Salirse</button>
+                        </form>
+                    </td>
+                    <td>
+                        <a href="{% url 'detalle_sesion' sesion.id %}" class="btn btn-outline-2">Detalle</a>
+                    </td>                
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No estás inscrite en ninguna sesión, ¡Motívate!</p>
+{% endif %}
+{% endblock %}

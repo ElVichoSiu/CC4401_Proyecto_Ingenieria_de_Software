@@ -1,0 +1,122 @@
+{% extends 'appG7/base.html' %}
+
+{% block title %} Sesion de estudio {% endblock %}
+{% block css %}
+{% load static %}
+<link rel="stylesheet" type="text/css"href="{% static '/appG7/login.css' %}">
+{% endblock %}
+{% block content %}
+   
+   <div class="container">
+    <h1 id="bajada"> Registrar una nueva sesión de  estudio</h1>
+   <form method="post" class="formulario">
+       {% csrf_token %}
+       <div class="form-group">
+           <label for="max_members">Cantidad miembros de la sesión  <br></label>
+           <input type="number" min="0" max="100"  class="form-control" id="max_members" name="max_members" required>
+       </div>
+
+        <div class="form-group">
+           <label for="fecha">Fecha de la sesión    <br> </label>
+           <input type="date" class="form-control" id="fecha" name="fecha" required>
+        </div>
+
+        <div class="form-group">
+            <label for="hora">Hora   <br> </label>
+            <input type="time" class="form-control" id="hora" name="hora" required>
+        </div>
+
+        <div class="form-group">
+        <label for="ramo">Seleccione el codigo del ramo    <br> </label>
+        <select name="ramo" id="ramo"  required>
+        <option value="MA1101">MA1101</option>
+        <option value="MA1001">MA1001</option>
+        <option value="FI1000">FI1000</option>
+        <option value="BT1211">BT1211</option>
+        <option value="MA1102">MA1102</option>
+        <option value="MA1002">MA1002</option>
+        <option value="FI1100">FI1100</option>
+        <option value="CC1002">CC1002</option>
+        <option value="IQ2211">IQ2211</option>
+        <option value="FI2003">FI2003</option>
+        <option value="MA2001">MA2001</option>
+        <option value="IN2201">IN2201</option>
+        <option value="IQ2212">IQ2212</option>
+        <option value="FI2002">FI2002</option>
+        <option value="MA2002">MA2002</option>
+        <option value="FI2004">FI2004</option>
+        </div>
+        <br>  
+        </select>
+
+        <div class="form-group">
+            <label for="seccion">Seccion del ramo <br></label>
+            <input type="number" min="0" max="20" class="form-control" id="seccion" name="seccion" required>
+        </div>
+       
+        <div class="form-group">
+        <label for="modo">Seleccione modalidad de sesión<br></label>
+        <select id="modo" onchange="cargaTipo()"  required>
+          <option value="1" selected>Seleccione la forma en que se hara la clase</option>
+          <option value="online">Online</option>
+          <option value="presencial">Presencial</option>
+        </div>
+        <br>  
+        </select>
+        <div class="form-group">
+        <label for="lugares"><br> Seleccione lugar<br></label>
+        <select id="lugares" name="lugares"  required>
+        </select>
+        </div>
+        <br>   
+        <div class="form-group">
+            <label for="descripcion">Descripción   <br> </label>
+            <textarea id="descripcion"  class="form-control" name="descripcion" rows="10" cols="60" maxlength="200" required></textarea>
+        </div>
+        <br>  
+        <div class="form-group">
+            <label for="link">Introduzca el link del medio de comunicación (solo será visible para quien se una a la sesión) <br> </label>
+            <textarea type="text" class="form-control" id="link" name="link" rows="3" cols="60" maxlength="200" required></textarea>
+            </div>
+        <br>  
+        <div class="botones">
+        <button type="submit" id="envio">Crear nueva sesión de estudio</button>
+        </div>
+   </form>
+   </div>
+   {% endblock %}
+   {% block javascript %}  
+   <script> 
+    function cargaTipo(){
+    let select = document.getElementById("modo");
+    let region = select.value;
+    
+    let selectTipos = document.getElementById("lugares");
+    selectTipos.innerHTML = "...";
+
+    let opcionBase = document.createElement("option");
+    opcionBase.text = "Seleccione donde será la reunion";
+    opcionBase.value = "a";
+    selectTipos.add(opcionBase);
+    
+    if (region == "online") {
+        (["Zoom", "Discord"]).forEach(
+            (element) => {
+                let option = document.createElement("option");
+                option.text = element;
+                option.value= element;
+                selectTipos.add(option);
+            });
+      
+    } else if (region == "presencial") {
+        (["850 - Pajarera", "850 - Biblioteca", "850 - Sala de Estudio Biblioteca", "850 - Zócalo", "850 - Mesas Hall Sur", "850 - Mesas Exteriores", "851 - Sala de Estudio -2 Edificio Norte", "851 - Cafetería Delta Té", "851 - Kinder", "851 - Salas CEC", "851 - Computadores CEC"]).forEach(
+            (element) => {
+                let option = document.createElement("option");
+                option.text = element;
+                option.value= element;
+                selectTipos.add(option);
+            });
+        }
+    }  
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'appG7/base.html' %}
+
+{% block title %} Registro {% endblock %}
+{% block css %}
+{% load static %}
+<link rel="stylesheet" type="text/css"href="{% static '/appG7/login.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container">
+   <h1 id="bajada"> Registrar un nuevo usuario</h1> 
+   <form method="post" class="formulario">
+       {% csrf_token %}
+
+       <div class="form-group">
+        <label for="apodo">Username<br></label>
+        <input type="text" class="form-control" id="username" name="username" required>
+       </div>
+
+       <div class="form-group">
+           <label for="nombre_usuario">Nombre<br></label>
+           <input type="text" class="form-control" id=nombre_usuario name="nombre" required>
+       </div>
+       
+       <div class="form-group">
+        <label for="apellido_usuario">Apellido<br></label>
+        <input type="text" class="form-control" id=apellido_usuario name="apellido" required>
+       </div>
+
+       <div class="form-group">
+           <label for="contraseña">Contraseña<br></label>
+           <input type="password" class="form-control" id="contraseña" name="contraseña" required>
+       </div>
+
+       <div>
+           <label for="pronombre">Pronombre<br></label>
+           <select id="pronombre" class="form-control" name="pronombre" required>
+               <option class="disabled" value="">Elige un pronombre</option>
+               <option value="El">El</option>
+               <option value="La">La</option>
+               <option value="Le">Le</option>
+               <option value="Otro">Otro</option>
+           </select>
+       </div>
+
+        <div class="form-group">
+            <label for="mail">Mail<br></label>
+            <input type="email" class="form-control" id="mail" name="mail" required>
+        </div>
+
+        <div class="botones">
+        <button type="submit" id="envio">Crear usuario</button>
+        </div>
+   </form>
+</div>
+{% endblock %}

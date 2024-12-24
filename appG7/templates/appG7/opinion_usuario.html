@@ -1,0 +1,58 @@
+{% extends 'appG7/base.html' %}
+
+{% block title %} Opinion {% endblock %}
+{% block css %}
+{% load static %}
+<link rel="stylesheet" type="text/css"href="{% static '/appG7/login.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 id="bajada"> Dejar una opinion</h1> 
+    <form method="post" class="formulario">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="opinion">Opinion<br></label>
+            <textarea id="opinion"  class="form-control" name="opinion" rows="10" cols="60" maxlength="200" required></textarea>
+        </div>
+
+        <div>
+            <label for="puntualidad">Puntualidad<br></label>
+            <select id="puntualidad" class="form-control" name="puntualidad" required>
+                <option class="disabled" value="">Elige un score para la puntualidad</option>
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5</option>
+                <option value=6>6</option>
+                <option value=7>7</option>
+                <option value=8>8</option>
+                <option value=9>9</option>
+                <option value=10>10</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="respeto">Respeto<br></label>
+            <select id="respeto" class="form-control" name="respeto" required>
+                <option class="disabled" value="">Elige un score para el respeto</option>
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5</option>
+                <option value=6>6</option>
+                <option value=7>7</option>
+                <option value=8>8</option>
+                <option value=9>9</option>
+                <option value=10>10</option>
+            </select>
+        </div>
+
+        <div class="botones">
+        <button type="submit" id="envio">Opinar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

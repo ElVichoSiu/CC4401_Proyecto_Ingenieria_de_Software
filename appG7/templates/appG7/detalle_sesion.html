@@ -1,0 +1,32 @@
+{% extends 'appG7/base.html' %}
+
+{% block title %} Sesion de {{sesion.autor}} {% endblock %}
+{% block css %}
+{% load static %}
+<link rel="stylesheet" type="text/css"href="{% static '/appG7/login.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h2> Sesion de estudio para {{sesion.ramo}} : {{sesion.seccion}} </h2>
+    <p> Autor/a: {{sesion.autor}} </p>
+    <p> Descripción: {{sesion.descripcion}} </p>
+    <p> Fecha: {{sesion.fecha}} </p>
+    <p> Hora: {{sesion.hora}} </p>
+    <h3> Miembros: </h3>
+    <ul>
+        {% for miembro in sesion.members.all %}
+            <li>
+                <a href="{% url 'user_profile' miembro.username %}"> {{miembro.username}} </a>
+                {% if sesion.autor == user.username %}
+                    <a href="{% url 'expulsar_miembre' sesion.id miembro.id %}"> Expulsar </a>
+                {% endif %}
+            </li>
+        {%empty%}
+            <li> No hay miembros </li>
+        {% endfor %}
+    </ul>
+    {% if sesion.autor == user.username %}
+        <a href="{% url 'borrar_sesion' sesion.id %}" class="btn btn-outline-2"> Borrar Sesion </a>
+    {% endif %}
+</div>
+{% endblock %}
